@@ -44,8 +44,7 @@ public class CustomConfigurationMavenProjectStub extends PmdProjectStub {
         Model model = null;
 
         try {
-            model = pomReader.read(new FileReader(new File(getBasedir()
-                    + "/src/test/resources/unit/custom-configuration/custom-configuration-plugin-config.xml")));
+            model = pomReader.read(new FileReader(new File(getBasedir() + "/" + getPOM())));
             setModel(model);
         } catch (Exception e) {
 
@@ -64,15 +63,15 @@ public class CustomConfigurationMavenProjectStub extends PmdProjectStub {
 
         Build build = new Build();
         build.setFinalName(model.getBuild().getFinalName());
-        build.setDirectory(getBasedir() + "/target/test/unit/custom-configuration/target");
-        build.setSourceDirectory(getBasedir() + "/src/test/resources/unit/custom-configuration");
+        build.setDirectory(getBasedir() + "/target");
+        build.setSourceDirectory(getBasedir().getAbsolutePath());
         setBuild(build);
 
         setReportPlugins(model.getReporting().getPlugins());
 
         String basedir = getBasedir().getAbsolutePath();
         List<String> compileSourceRoots = new ArrayList<>();
-        compileSourceRoots.add(basedir + "/src/test/resources/unit/custom-configuration/custom/configuration");
+        compileSourceRoots.add(basedir + "/custom/configuration");
         setCompileSourceRoots(compileSourceRoots);
 
         Artifact artifact = new PmdPluginArtifactStub(getGroupId(), getArtifactId(), getVersion(), getPackaging());
@@ -102,5 +101,15 @@ public class CustomConfigurationMavenProjectStub extends PmdProjectStub {
     @Override
     public List<ReportPlugin> getReportPlugins() {
         return reportPlugins;
+    }
+
+    @Override
+    public File getBasedir() {
+        return new File(super.getBasedir() + "/custom-configuration");
+    }
+
+    @Override
+    protected String getPOM() {
+        return "custom-configuration-plugin-config.xml";
     }
 }
